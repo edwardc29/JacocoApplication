@@ -1,0 +1,59 @@
+apply plugin: 'jacoco'
+
+//ext {
+//    coverageSourceDirs = 'src/test/java'
+//}
+
+jacoco {
+    toolVersion = "0.8.5"
+    reportsDir = file("$project.rootDir/app/build/reports/rep") // file for reports (xml, html)
+}
+
+tasks.withType(Test) { jacoco.includeNoLocationClasses = true }
+
+project.afterEvaluate {
+    (android.hasProperty('applicationVariants')
+            ? android.'applicationVariants'
+            : android.'libraryVariants').all { variant ->
+        def variantName = variant.name
+        def unitTestTask = "test${variantName.capitalize()}UnitTest"
+
+        tasks.create(name: "${unitTestTask}Coverage", type: JacocoReport, dependsOn: "$unitTestTask") {
+            group = "Reporting"
+            description = "Generate Jacoco coverage reports for ${variantName.capitalize()} build"
+
+            reports {
+                xml.enabled = true
+                html.enabled = true
+            }
+
+            def excludes = [
+                    '**/R.class',
+                    '**/R$*.class',
+                    '**/Manifest*.*',
+                    'android/**/*.*',
+                    '**/BuildConfig.*',
+                    '**/*$ViewBinder*.*',
+                    '**/*$ViewInjector*.*',
+                    '**/Lambda$*.class',
+                    '**/Lambda.class',
+                    '**/*Lambda.class',
+                    '**/*Lambda*.class'
+            ]
+
+            classDirectories.setFrom(files([
+                    fileTree(dir: "${buildDir}/tmp/kotlin-classes/${variantName}", exclude: excludes)
+            ]))
+
+            def coverageSourceDirs = [
+                    "$project.rootDir/app/src/main/java",
+                    "$project.projectDir/src/${variantName}/java"
+            ]
+
+            additionalClassDirs.setFrom(files(coverageSourceDirs))
+            sourceDirectories.setFrom(files([coverageSourceDirs]))
+
+            executionData.setFrom("$project.buildDir/jacoco/${unitTestTask}.exec")
+        }
+    }
+}

@@ -8,9 +8,11 @@ pipeline {
          }
       }
       stage('Sonar') {
-         withSonarQubeEnv("SonarQube") {
-            sh "./gradlew --info sonarqube --no-daemon"
-         }
+      	 steps {
+      	 	withSonarQubeEnv("SonarQube") {
+               sh "./gradlew --info sonarqube --no-daemon"
+            }
+      	 }
       }
    }
 }

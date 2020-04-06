@@ -9,7 +9,7 @@ pipeline {
       }
       stage('Build') {
       	steps {
-      		sh "./gradlew build clean"
+      		sh "./gradlew assembleDebug --no-daemon"
       	}
       }
       stage('Sonar') {

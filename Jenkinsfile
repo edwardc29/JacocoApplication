@@ -7,6 +7,11 @@ pipeline {
             checkout scm
          }
       }
+      stage('Build') {
+        steps {
+            sh "./gradlew assembleDebug --no-daemon"
+        }
+      }
       stage('Sonar') {
       	 steps {
       	 	withSonarQubeEnv("SonarQube") {

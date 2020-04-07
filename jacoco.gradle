@@ -6,7 +6,6 @@ apply plugin: 'jacoco'
 
 jacoco {
     toolVersion = "0.8.5"
-    reportsDir = file("$project.rootDir/app/build/reports/rep") // file for reports (xml, html)
 }
 
 tasks.withType(Test) { jacoco.includeNoLocationClasses = true }

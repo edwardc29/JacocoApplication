@@ -1,6 +1,26 @@
 pipeline {
    agent any
 
+   triggers{
+           bitbucketpr(projectPath:'https://bitbucket.org/edwardc29/',
+               cron: 'H/15 * * * *',
+               credentialsId: '',
+               username: '',
+               password: '',
+               repositoryOwner: '',
+               repositoryName: '',
+               branchesFilter: '',
+               branchesFilterBySCMIncludes: false,
+               ciKey: '',
+               ciName: '',
+               ciSkipPhrases: '',
+               checkDestinationCommit: false,
+               approveIfSuccess: false,
+               cancelOutdatedJobs: true,
+               buildChronologically: true,
+               commentTrigger: '')
+       }
+
    stages {
       stage('Checkout') {
          steps {

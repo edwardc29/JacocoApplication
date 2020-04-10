@@ -14,20 +14,17 @@ pipeline {
          steps {
             bitbucketStatusNotify(buildState: 'INPROGRESS')
             checkout scm
-            echo 'checkout...'
          }
       }
       stage('Build') {
         steps {
             sh "./gradlew assembleDebug --no-daemon"
-            echo 'building...'
         }
       }
       stage('Sonar') {
       	 steps {
       	 	withSonarQubeEnv("SonarQube") {
                sh "./gradlew --info sonarqube --no-daemon"
-               echo 'sonar....'
             }
       	 }
       }
@@ -47,15 +44,12 @@ pipeline {
    post {
       success {
          bitbucketStatusNotify(buildState: 'SUCCESSFUL')
-         echo 'Successful!'
       }
       aborted {
          bitbucketStatusNotify(buildState: 'FAILED')
-         echo 'ABORTED!'
       }
       failure {
          bitbucketStatusNotify(buildState: 'FAILED')
-         echo 'FAILED!'
       }
    }
 }

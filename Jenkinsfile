@@ -12,19 +12,17 @@ pipeline {
    stages {
       stage('Checkout') {
          steps {
-            checkout scm
+            echo 'checkout...'
          }
       }
       stage('Build') {
         steps {
-            sh "./gradlew assembleDebug --no-daemon"
+            echo 'building...'
         }
       }
       stage('Sonar') {
       	 steps {
-      	 	withSonarQubeEnv("SonarQube") {
-               sh "./gradlew --info sonarqube --no-daemon"
-            }
+      	 	echo 'analyzing Sonar...'
       	 }
       }
    }

@@ -1,14 +1,34 @@
 apply plugin: 'org.sonarqube'
 
+subprojects {
+    sonarqube {
+        androidVariant getFlavor()
+    }
+}
+
 sonarqube {
+    androidVariant getFlavor()
+
     properties {
         property 'sonar.projectName', 'Jacoco Application'
         property "sonar.projectKey", "jacoco-application"
         property "sonar.login", "${sonarLogin}"
         property 'sonar.host.url', "${sonarHostUrl}"
         property "sonar.exclusions", "**/*.xml"
-        property "sonar.coverage.jacoco.xmlReportPaths", "$project.rootDir/app/build/reports/jacoco/testDebugUnitTestCoverage/testDebugUnitTestCoverage.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "$project.rootDir/app/build/reports/jacoco/test${androidVariant.capitalize()}UnitTestCoverage/test${androidVariant.capitalize()}UnitTestCoverage.xml"
     }
 }
 
 tasks.sonarqube.dependsOn ":app:testDebugUnitTestCoverage"
+
+def getFlavor() {
+    def artifactId = "${System.env.ARTIFACT_ID}"
+
+    if (artifactId == null) {
+        flavorName = 'debug'
+    } else {
+        flavorName = "${artifactId}Debug"
+    }
+
+    return flavorName
+}

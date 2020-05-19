@@ -29,6 +29,17 @@ android {
         }
     }
 
+    flavorDimensions "dimen"
+
+    productFlavors {
+        free {
+            dimension "dimen"
+        }
+        full {
+            dimension "dimen"
+        }
+    }
+
     testOptions {
         unitTests.all {
             jacoco {
